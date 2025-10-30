@@ -141,3 +141,5 @@ dist
 *.zip
 .env
 config/service-account.json
+config/s3Client.js
+cron/sendMotivationalNotification.js
