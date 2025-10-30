@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Payment Status • Razorpay</title>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--success:#10b981;--fail:#ef4444;--muted:#94a3b8;--glass:rgba(255,255,255,0.03)}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;color:#e6eef8;background:linear-gradient(180deg,#071024 0%, #071a2a 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:0}
+    .container{width:100%;max-width:420px;padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh}
+    .card{width:100%;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:16px;padding:28px;box-shadow:0 10px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+    .badge{height:120px;width:120px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+    .statusIcon{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;transform:scale(0);animation:pop .45s ease forwards}
+    @keyframes pop{to{transform:scale(1)}}
+    h1{margin:0;font-size:22px;color:#e6f5ee}
+    p.lead{margin:8px 0 18px;color:var(--muted);font-size:14px}
+    .meta{width:100%;margin-top:10px}
+    .meta .item{background:var(--glass);padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);margin-bottom:12px;text-align:left}
+    .meta .title{font-size:12px;color:var(--muted);margin-bottom:4px}
+    .meta .value{font-weight:600;color:#e6f5ee}
+    .doneBtn{margin-top:20px;padding:12px 20px;border-radius:10px;border:0;cursor:pointer;font-weight:600;width:100%}
+    .receipt{margin-top:12px;text-align:center;color:var(--muted);font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card" role="main" aria-labelledby="statusTitle">
+      <div class="badge" aria-hidden id="iconContainer"></div>
+
+      <h1 id="statusTitle">Payment successful</h1>
+      <p class="lead" id="statusMessage">Thank you — your payment has been processed successfully.</p>
+
+      <div class="meta" aria-live="polite">
+        <div class="item">
+          <div class="title">Amount</div>
+          <div class="value" id="amount">—</div>
+        </div>
+        <div class="item">
+          <div class="title">Order ID</div>
+          <div class="value" id="orderId">—</div>
+        </div>
+      </div>
+
+      <button class="doneBtn" id="doneBtn">Done</button>
+
+      <div class="receipt" id="timestamp">—</div>
+    </div>
+  </div>
+
+  <script>
+    function qs(key){
+      const params = new URLSearchParams(location.search);
+      return params.get(key);
+    }
+
+    const rawAmount = qs('amount') || '100.00';
+    const amountValue = formatAmount(rawAmount);
+    const orderIdValue = qs('order_id') || 'order_DBJOWzybf0sJbb';
+    const statusValue = (qs('status') || 'success').toLowerCase();
+
+    document.getElementById('amount').textContent = '₹ ' + amountValue;
+    document.getElementById('orderId').textContent = orderIdValue;
+
+    const ts = new Date();
+    document.getElementById('timestamp').textContent = (statusValue === 'failed' ? 'Attempted on ' : 'Paid on ') + ts.toLocaleString();
+
+    const iconContainer = document.getElementById('iconContainer');
+    const title = document.getElementById('statusTitle');
+    const message = document.getElementById('statusMessage');
+    const doneBtn = document.getElementById('doneBtn');
+
+    if(statusValue === 'failed'){
+      iconContainer.innerHTML = `<div class="statusIcon" style="background:linear-gradient(180deg,var(--fail),#dc2626);box-shadow:0 6px 18px rgba(220,38,38,0.25)"><svg width="36" height="36" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`;
+      title.textContent = 'Payment Failed';
+      message.textContent = 'Unfortunately, your payment could not be completed. Please try again.';
+      doneBtn.style.background = 'linear-gradient(90deg,var(--fail),#dc2626)';
+    } else {
+      iconContainer.innerHTML = `<div class="statusIcon" style="background:linear-gradient(180deg,var(--success),#059669);box-shadow:0 6px 18px rgba(5,150,105,0.25)"><svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`;
+    }
+
+    // ✅ Auto send message after 3 seconds
+    setTimeout(() => {
+        window.ReactNativeWebView.postMessage(
+        JSON.stringify({
+            type: 'PAYMENT_DONE',
+            order_id: orderIdValue,
+            status: statusValue,
+        })
+        );
+    }, 3000);
+
+    doneBtn.addEventListener('click', ()=>{
+      if (window.ReactNativeWebView) {
+        window.ReactNativeWebView.postMessage(JSON.stringify({type:'PAYMENT_DONE', order_id: orderIdValue, status: statusValue}));
+      }
+      try{window.close();}catch(e){location.href='/';}
+    });
+
+    function formatAmount(v){
+      if(!v) return '0.00';
+      const n = String(v).trim();
+      if(/^[0-9]+$/.test(n)){
+        if(n.length>3) return (Number(n)/100).toFixed(2);
+        return Number(n).toFixed(2);
+      }
+      const parsed = parseFloat(n);
+      return isNaN(parsed) ? '0.00' : parsed.toFixed(2);
+    }
+
+    document.getElementById('statusTitle').focus?.();
+  </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Razorpay Payment</title>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const options = {
+      key: "rzp_live_fycM10IO0gAtF9", // Replace with your key_id
+      amount: urlParams.get("amount"),
+      order_id: urlParams.get("order_id"),
+      name: urlParams.get("name"),
+       callback_url: encodeURI('https://api.astroone.in/api/customers/razorpayCallback'),
+      prefill: {
+        email: urlParams.get("email"),
+        contact: urlParams.get("contact"),
+      },
+      handler: function (response) {
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({ status: "success", data: response })
+        );
+      },
+      modal: {
+        ondismiss: function () {
+          window.ReactNativeWebView.postMessage(
+            JSON.stringify({ status: "cancelled" })
+          );
+        },
+      },
+    };
+    const rzp = new Razorpay(options);
+    rzp.open();
+  </script>
+</body>
+</html>

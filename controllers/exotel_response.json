@@ -1,0 +1,26 @@
+{
+  "CallSid": "cb83604ebaf14ccaf33cbbc0a3e1198q",
+  "EventType": "terminal",
+  "DateCreated": "2025-08-26 11:29:33",
+  "DateUpdated": "2025-08-26 11:30:04",
+  "Status": "completed",
+  "To": "09560402739",
+  "From": "09069590284",
+  "PhoneNumberSid": "01140846705",
+  "StartTime": "2025-08-26 11:29:33",
+  "EndTime": "2025-08-26 11:30:04",
+  "EventTime": "2025-08-26 11:30:04",
+  "Direction": "outbound-api",
+  "RecordingUrl": "",
+  "ConversationDuration": 7,
+  "Legs": [
+    {
+      "OnCallDuration": 26,
+      "Status": "completed"
+    },
+    {
+      "OnCallDuration": 7,
+      "Status": "completed"
+    }
+  ]
+}

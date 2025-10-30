@@ -1,0 +1,435 @@
+
+"api => https://kundli2.astrosetalk.com/api/kp/get_planet_significators"
+{
+  "success": true,
+  "message": "Planet Significators fetched successfully",
+  "responseData": {
+    "message": "Planet significators fetched successfully",
+    "status": true,
+    "data": [
+      {
+        "planetSignificatorsData": {
+          "name": "Satya Tiwari",
+          "year": 1987,
+          "month": 3,
+          "day": 31,
+          "hour": 0,
+          "min": 55,
+          "latitude": 26.6550589,
+          "longitude": 84.8986636,
+          "timezone": 5.5,
+          "gender": "male",
+          "planetSignificators": [
+            {
+              "planet": "Sun",
+              "significators": [
+                [
+                  12
+                ],
+                [
+                  3
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  9
+                ]
+              ]
+            },
+            {
+              "planet": "Moon",
+              "significators": [
+                [
+                  9
+                ],
+                [
+                  3
+                ],
+                [],
+                [
+                  8
+                ]
+              ]
+            },
+            {
+              "planet": "Mars",
+              "significators": [
+                [
+                  3
+                ],
+                [
+                  5
+                ],
+                [
+                  9
+                ],
+                [
+                  4,
+                  5,
+                  12
+                ]
+              ]
+            },
+            {
+              "planet": "Mercury",
+              "significators": [
+                [
+                  3
+                ],
+                [
+                  2
+                ],
+                [],
+                [
+                  7
+                ]
+              ]
+            },
+            {
+              "planet": "Jupiter",
+              "significators": [
+                [
+                  12
+                ],
+                [
+                  3
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  1
+                ]
+              ]
+            },
+            {
+              "planet": "Venus",
+              "significators": [
+                [
+                  3
+                ],
+                [
+                  2
+                ],
+                [],
+                [
+                  6,
+                  10,
+                  11
+                ]
+              ]
+            },
+            {
+              "planet": "Saturn",
+              "significators": [
+                [
+                  2
+                ],
+                [
+                  12
+                ],
+                [
+                  7
+                ],
+                [
+                  2,
+                  3
+                ]
+              ]
+            },
+            {
+              "planet": "Rahu",
+              "significators": [
+                [
+                  2
+                ],
+                [
+                  3
+                ],
+                [
+                  7
+                ],
+                []
+              ]
+            },
+            {
+              "planet": "Ketu",
+              "significators": [
+                [
+                  3
+                ],
+                [
+                  9
+                ],
+                [
+                  8
+                ],
+                []
+              ]
+            },
+            {
+              "planet": "Uranus",
+              "significators": [
+                [
+                  9
+                ],
+                [
+                  12
+                ],
+                [],
+                []
+              ]
+            },
+            {
+              "planet": "Neptune",
+              "significators": [
+                [
+                  2
+                ],
+                [
+                  12
+                ],
+                [
+                  6,
+                  10,
+                  11
+                ],
+                []
+              ]
+            },
+            {
+              "planet": "Pluto",
+              "significators": [
+                [
+                  3
+                ],
+                [
+                  10
+                ],
+                [],
+                []
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+
+
+"api => https://kundli2.astrosetalk.com/api/kp/get_house_significators"
+{
+  "success": true,
+  "message": "House Significators fetched successfully",
+  "responseData": {
+    "message": "House significators fetched successfully",
+    "status": true,
+    "data": [
+      {
+        "houseSignificatorsData": {
+          "name": "Satya Tiwari",
+          "year": 1987,
+          "month": 3,
+          "day": 31,
+          "hour": 0,
+          "min": 55,
+          "latitude": 26.6550589,
+          "longitude": 84.8986636,
+          "timezone": 5.5,
+          "gender": "male",
+          "houseSignificators": [
+            {
+              "house": 1,
+              "significators": [
+                [],
+                [],
+                [],
+                [
+                  "Jupiter"
+                ]
+              ]
+            },
+            {
+              "house": 2,
+              "significators": [
+                [
+                  "Saturn",
+                  "Rahu",
+                  "Neptune"
+                ],
+                [
+                  "Mercury",
+                  "Venus"
+                ],
+                [
+                  "Sun",
+                  "Jupiter"
+                ],
+                [
+                  "Saturn"
+                ]
+              ]
+            },
+            {
+              "house": 3,
+              "significators": [
+                [
+                  "Mars",
+                  "Ketu",
+                  "Mercury",
+                  "Venus",
+                  "Pluto"
+                ],
+                [
+                  "Sun",
+                  "Moon",
+                  "Jupiter",
+                  "Rahu"
+                ],
+                [
+                  "Sun",
+                  "Jupiter"
+                ],
+                [
+                  "Saturn"
+                ]
+              ]
+            },
+            {
+              "house": 4,
+              "significators": [
+                [],
+                [],
+                [],
+                [
+                  "Mars"
+                ]
+              ]
+            },
+            {
+              "house": 5,
+              "significators": [
+                [],
+                [
+                  "Mars"
+                ],
+                [],
+                [
+                  "Mars"
+                ]
+              ]
+            },
+            {
+              "house": 6,
+              "significators": [
+                [],
+                [],
+                [
+                  "Neptune"
+                ],
+                [
+                  "Venus"
+                ]
+              ]
+            },
+            {
+              "house": 7,
+              "significators": [
+                [],
+                [],
+                [
+                  "Saturn",
+                  "Rahu"
+                ],
+                [
+                  "Mercury"
+                ]
+              ]
+            },
+            {
+              "house": 8,
+              "significators": [
+                [],
+                [],
+                [
+                  "Ketu"
+                ],
+                [
+                  "Moon"
+                ]
+              ]
+            },
+            {
+              "house": 9,
+              "significators": [
+                [
+                  "Moon",
+                  "Uranus"
+                ],
+                [
+                  "Ketu"
+                ],
+                [
+                  "Mars"
+                ],
+                [
+                  "Sun"
+                ]
+              ]
+            },
+            {
+              "house": 10,
+              "significators": [
+                [],
+                [
+                  "Pluto"
+                ],
+                [
+                  "Neptune"
+                ],
+                [
+                  "Venus"
+                ]
+              ]
+            },
+            {
+              "house": 11,
+              "significators": [
+                [],
+                [],
+                [
+                  "Neptune"
+                ],
+                [
+                  "Venus"
+                ]
+              ]
+            },
+            {
+              "house": 12,
+              "significators": [
+                [
+                  "Sun",
+                  "Jupiter"
+                ],
+                [
+                  "Saturn",
+                  "Uranus",
+                  "Neptune"
+                ],
+                [],
+                [
+                  "Mars"
+                ]
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

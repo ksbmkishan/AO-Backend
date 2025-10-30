@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>VR Experience</title>
+    <!-- Load A-Frame with improved version -->
+    <script src="aframe.min.js"></script>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: #000; /* Prevent white flash */
+      }
+      #vr-button {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        padding: 12px;
+        background: rgba(0,150,255,0.8);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        z-index: 9999;
+        font-family: Arial, sans-serif;
+      }
+      #permission-button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        padding: 12px;
+        background: rgba(255,255,255,0.8);
+        border: none;
+        border-radius: 4px;
+        z-index: 9999;
+        font-family: Arial, sans-serif;
+      }
+      .a-enter-vr-button {
+        display: none !important;
+      }
+      /* Loading indicator */
+      #loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 10000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-family: Arial;
+      }
+    </style>
+    <script>
+      let permissionGranted = false;
+      let vrSessionActive = false;
+      const MAX_VR_DURATION = 25 * 1000; // 25 seconds (with 5s buffer)
+      let vrTimeout;
+      
+      function requestPermissions() {
+        if (typeof DeviceOrientationEvent !== 'undefined' && 
+            typeof DeviceOrientationEvent.requestPermission === 'function') {
+          Promise.all([
+            DeviceOrientationEvent.requestPermission(),
+            DeviceMotionEvent.requestPermission()
+          ]).then(results => {
+            if (results.every(r => r === 'granted')) {
+              permissionGranted = true;
+              document.getElementById('permission-button').style.display = 'none';
+            }
+          }).catch(console.error);
+        } else {
+          permissionGranted = true;
+          const btn = document.getElementById('permission-button');
+          if (btn) {
+            btn.style.display = 'none';
+          }
+        }
+      }
+      
+      function handleVRExit() {
+        vrSessionActive = false;
+        clearTimeout(vrTimeout);
+        document.getElementById('vr-button').textContent = 'Enter VR Mode';
+      }
+      
+      function startVRSessionTimer() {
+        // Clear any existing timeout
+        clearTimeout(vrTimeout);
+        
+        // Set new timeout to prevent white screen
+        vrTimeout = setTimeout(() => {
+          if (vrSessionActive) {
+            const scene = document.querySelector('a-scene');
+            if (scene) {
+              scene.exitVR();
+              setTimeout(() => {
+                scene.enterVR(); // Re-enter VR to refresh session
+              }, 500);
+            }
+          }
+        }, MAX_VR_DURATION);
+      }
+      
+      function enterVR() {
+        if (!permissionGranted) {
+          alert('Please grant device motion/orientation permissions first');
+          return;
+        }
+        
+        const scene = document.querySelector('a-scene');
+        if (!scene) {
+          alert('Scene element not found');
+          return;
+        }
+        
+        if (scene.is('vr-mode') || scene.is('ar-mode')) {
+          scene.exitVR();
+          handleVRExit();
+        } else {
+          // Show loading state
+          document.getElementById('vr-button').textContent = 'Loading...';
+          
+          scene.enterVR().then(() => {
+            vrSessionActive = true;
+            document.getElementById('vr-button').textContent = 'Exit VR Mode';
+            startVRSessionTimer();
+          }).catch(error => {
+            console.error('VR Error:', error);
+            document.getElementById('vr-button').textContent = 'Enter VR Mode';
+            alert('VR failed: ' + error.message);
+          });
+        }
+      }
+      
+      window.addEventListener('load', function() {
+        // Show loading overlay initially
+        const loadingOverlay = document.createElement('div');
+        loadingOverlay.id = 'loading-overlay';
+        loadingOverlay.innerHTML = 'Loading VR Experience...';
+        document.body.appendChild(loadingOverlay);
+        
+        // Get image URL from parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const imageUrl = urlParams.get('image');
+        
+        const scene = document.querySelector('a-scene');
+        scene.addEventListener('loaded', function() {
+          // Hide loading overlay
+          document.getElementById('loading-overlay').style.display = 'none';
+          
+          // Update sky texture if parameter exists
+          if (imageUrl) {
+            const sky = document.querySelector('a-sky');
+            if (sky) {
+              // Preload image first
+              const img = new Image();
+              img.onload = function() {
+                sky.setAttribute('src', imageUrl);
+              };
+              img.src = imageUrl;
+            }
+          }
+          
+          // Auto-request permissions on Android/non-iOS devices
+          if (!(typeof DeviceOrientationEvent !== 'undefined' && 
+                typeof DeviceOrientationEvent.requestPermission === 'function')) {
+            requestPermissions();
+          }
+        });
+        
+        // Handle VR session end
+        scene.addEventListener('exit-vr', handleVRExit);
+      });
+
+      window.addEventListener('deviceorientation', function(event) {
+    // Just check if it's firing (debug)
+    console.log("Rotation working:", event.alpha);
+  });
+    </script>
+  </head>
+  <body>
+    <a-scene 
+      vr-mode-ui="enabled: false"
+      renderer="antialias: true; logarithmicDepthBuffer: true; precision: high;"
+      loading-screen="enabled: false"
+      embedded
+    >
+      <a-assets>
+        <img id="sky-texture" src="https://storage.googleapis.com/static-temple360/360/Shrigeetabirlamandirkurukshetra/2.jpg" crossorigin="anonymous">
+      </a-assets>
+      
+      <!-- Main scene content -->
+      <a-sky src="#sky-texture" rotation="0 -130 0"></a-sky>
+      <a-text font="kelsonsans" value="Puy de Sancy, France" width="6" 
+              position="-2.5 0.25 -1.5" rotation="0 15 0"></a-text>
+              
+      <!-- Keepalive component to prevent timeouts -->
+      <a-entity keepalive></a-entity>
+    </a-scene>
+    
+    <!-- <button id="permission-button" onclick="requestPermissions()">
+      Grant Sensor Access
+    </button> -->
+    <button id="vr-button" onclick="enterVR()">
+      Enter VR Mode
+    </button>
+  </body>
+</html>
